@@ -22,13 +22,13 @@ Ensure you have the following tools installed on your system:
 2. run the script
 
 ```bash
-./run.sh <dummy_username> <dummy_password> <target_url>
+./run.sh <openplc-server>
 ```
 
 for example
 
 ```bash
-./run.sh openplc openplc http://192.168.1.50:8080
+./run.sh http://192.168.1.50:8080
 ```
 
 

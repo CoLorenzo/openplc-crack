@@ -22,15 +22,13 @@ test-credentials() {
 }
 
 # ------------- MAIN ------------- #
-if [ "$#" -ne 3 ]; then
-    echo "Usage: $0 <username> <password> <host>"
+if [ "$#" -ne 1 ]; then
+    echo "Usage: $0 <host>"
     exit 1
 fi  
 
 
-USERNAME="$1"
-PASSWORD="$2"
-HOST="$3"
+HOST="$1"
 
 while IFS= read -r USERNAME || [[ -n "$USERNAME" ]]; do
     while IFS= read -r PASSWORD || [[ -n "$PASSWORD" ]]; do
