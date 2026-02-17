@@ -29,7 +29,19 @@ fi
 
 
 HOST="$1"
-SECONDS=0
+TIMEOUT_SECONDS=7
+SLEEP_INTERVAL=2
+elapsed=0
+while [[ "$(curl -s -o /dev/null -w "%{http_code}" "${HOST}")" == "000" ]]; do
+  if (( elapsed >= TIMEOUT_SECONDS )); then
+    echo "RESULT: Timeout reached (${TIMEOUT_SECONDS}s). Service is not available."
+    exit 1
+  fi
+
+  echo "Waiting for the service to become available... (${elapsed}s)"
+  sleep "${SLEEP_INTERVAL}"
+  ((elapsed+=SLEEP_INTERVAL))
+done
 
 while IFS= read -r USERNAME || [[ -n "$USERNAME" ]]; do
     while IFS= read -r PASSWORD || [[ -n "$PASSWORD" ]]; do
