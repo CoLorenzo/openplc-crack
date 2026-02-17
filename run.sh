@@ -41,5 +41,5 @@ while IFS= read -r USERNAME || [[ -n "$USERNAME" ]]; do
         fi
     done < passwords.txt
 done < usernames.txt
-printf "+ \"RESULT: No match was found\nSearched for ${SECONDS}s\"\n"
+printf "+ \"RESULT: No match was found. Searched took ${SECONDS}s\"\n"
 exit 0
