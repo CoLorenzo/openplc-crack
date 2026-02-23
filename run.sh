@@ -1,4 +1,4 @@
-#!/bin/bash
+4#!/bin/bash
 
 test-credentials() {
     local username="$1"
@@ -22,36 +22,40 @@ test-credentials() {
 }
 
 # ------------- MAIN ------------- #
-if [ "$#" -ne 1 ]; then
-    echo "Usage: $0 <host>"
+if [ "$#" -ne 2 ]; then
+    echo "Usage: $0 <host> <loki-endpoint>"
     exit 1
 fi  
 
 
+
+
+
 HOST="$1"
+export SMOLOKI_BASE_ENDPOINT="$2"
 TIMEOUT_SECONDS=7
 SLEEP_INTERVAL=2
 elapsed=0
 while [[ "$(curl -s -o /dev/null -w "%{http_code}" "${HOST}")" == "000" ]]; do
   if (( elapsed >= TIMEOUT_SECONDS )); then
-    echo "RESULT: Timeout reached (${TIMEOUT_SECONDS}s). Service is not available."
+    smoloki '{"job":"test","level":"info", "host":"${HOST}"}' '{"message":"Timeout reached (${TIMEOUT_SECONDS}s). Service is not available."}'
     exit 1
   fi
 
-  echo "Waiting for the service to become available... (${elapsed}s)"
+  smoloki '{"job":"test","level":"info", "host":"${HOST}"}' '{"message":"Waiting for the service to become available... (${elapsed}s)"}'
   sleep "${SLEEP_INTERVAL}"
   ((elapsed+=SLEEP_INTERVAL))
 done
 
 while IFS= read -r USERNAME || [[ -n "$USERNAME" ]]; do
     while IFS= read -r PASSWORD || [[ -n "$PASSWORD" ]]; do
-        printf "testing ${USERNAME}:${PASSWORD} on ${HOST}\n"
+        smoloki '{"job":"test","level":"info", "host":"${HOST}"}' '{"message":"testing ${USERNAME}:${PASSWORD} on ${HOST}"}'
         RESULT=$(test-credentials "${USERNAME}" "${PASSWORD}" "${HOST}")
         if [[ -n "$RESULT" ]]; then
-            printf "+ RESULT: ${RESULT} on ${HOST} found in ${SECONDS}s\n"
+            smoloki '{"job":"test","level":"info", "host":"${HOST}"}' '{"message":"+ RESULT: ${RESULT} on ${HOST} found in ${SECONDS}s"}'
             exit 0
         fi
     done < passwords.txt
 done < usernames.txt
-printf "+ \"RESULT: No match was found. Searched took ${SECONDS}s\"\n"
+smoloki '{"job":"test","level":"info", "host":"${HOST}"}' '{"message":"+ \"RESULT: No match was found. Searched took ${SECONDS}s\"\n"}'
 exit 0
