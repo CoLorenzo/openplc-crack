@@ -1,4 +1,4 @@
-4#!/bin/bash
+#!/bin/bash
 
 test-credentials() {
     local username="$1"
