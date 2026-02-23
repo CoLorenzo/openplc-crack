@@ -42,20 +42,20 @@ while [[ "$(curl -s -o /dev/null -w "%{http_code}" "${HOST}")" == "000" ]]; do
     exit 1
   fi
 
-  smoloki '{"job":"test","level":"info", "host":"${HOST}"}' '{"message":"Waiting for the service to become available... (${elapsed}s)"}'
+  printf "Waiting for the service to become available... (${elapsed}s)"
   sleep "${SLEEP_INTERVAL}"
   ((elapsed+=SLEEP_INTERVAL))
 done
 
 while IFS= read -r USERNAME || [[ -n "$USERNAME" ]]; do
     while IFS= read -r PASSWORD || [[ -n "$PASSWORD" ]]; do
-        smoloki '{"job":"test","level":"info", "host":"${HOST}"}' '{"message":"testing ${USERNAME}:${PASSWORD} on ${HOST}"}'
+        printf "testing ${USERNAME}:${PASSWORD} on ${HOST}"
         RESULT=$(test-credentials "${USERNAME}" "${PASSWORD}" "${HOST}")
         if [[ -n "$RESULT" ]]; then
-            smoloki '{"job":"test","level":"info", "host":"${HOST}"}' '{"message":"+ RESULT: ${RESULT} on ${HOST} found in ${SECONDS}s"}'
+            smoloki '{"job":"test","level":"info", "host":"${HOST}"}' '{"message":"${RESULT} found in ${SECONDS}s"}'
             exit 0
         fi
     done < passwords.txt
 done < usernames.txt
-smoloki '{"job":"test","level":"info", "host":"${HOST}"}' '{"message":"+ \"RESULT: No match was found. Searched took ${SECONDS}s\"\n"}'
+smoloki '{"job":"test","level":"info", "host":"${HOST}"}' '{"message":"No match was found. Searched took ${SECONDS}s"}'
 exit 0
