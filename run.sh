@@ -38,7 +38,7 @@ SLEEP_INTERVAL=2
 elapsed=0
 while [[ "$(curl -s -o /dev/null -w "%{http_code}" "${HOST}")" == "000" ]]; do
   if (( elapsed >= TIMEOUT_SECONDS )); then
-    smoloki '{"job":"test","level":"info", "host":"${HOST}"}' '{"message":"Timeout reached (${TIMEOUT_SECONDS}s). Service is not available."}'
+    smoloki "{\"job\":\"test\",\"level\":\"info\", \"host\":\"${HOST}\"}" "{\"message\":\"Timeout reached (${TIMEOUT_SECONDS}s). Service is not available.\"}"
     exit 1
   fi
 
@@ -52,10 +52,10 @@ while IFS= read -r USERNAME || [[ -n "$USERNAME" ]]; do
         printf "testing ${USERNAME}:${PASSWORD} on ${HOST}"
         RESULT=$(test-credentials "${USERNAME}" "${PASSWORD}" "${HOST}")
         if [[ -n "$RESULT" ]]; then
-            smoloki '{"job":"test","level":"info", "host":"${HOST}"}' '{"message":"${RESULT} found in ${SECONDS}s"}'
+            smoloki "{\"job\":\"test\",\"level\":\"info\", \"host\":\"${HOST}\"}" "{\"message\":\"${RESULT} found in ${SECONDS}s\"}"
             exit 0
         fi
     done < passwords.txt
 done < usernames.txt
-smoloki '{"job":"test","level":"info", "host":"${HOST}"}' '{"message":"No match was found. Searched took ${SECONDS}s"}'
+smoloki "{\"job\":\"test\",\"level\":\"info\", \"host\":\"${HOST}\"}" "{\"message\":\"No match was found. Searched took ${SECONDS}s\"}"
 exit 0
