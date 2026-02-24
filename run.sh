@@ -33,7 +33,7 @@ test-credentials() {
                 if (( elapsed >= TIMEOUT_SECONDS )); then
                     # FIXED: Correct stderr redirection
                     echo "DEBUG: Timeout reached" >&2 
-                    smoloki "{\"job\":\"test\",\"level\":\"info\", \"host\":\"${host}\"}" "{\"message\":\"Timeout reached (${TIMEOUT_SECONDS}s).\"}"
+                    smoloki "{\"job\":\"test\",\"level\":\"info\", \"host\":\"${HOSTNAME}\"}" "{\"message\":\"Timeout reached (${TIMEOUT_SECONDS}s).\"}"
                     return 1 # Return 1 so the main loop knows to exit
                 fi
                 
@@ -71,10 +71,10 @@ while IFS= read -r USERNAME || [[ -n "$USERNAME" ]]; do
         fi
 
         if [[ -n "$RESULT" ]]; then
-            smoloki "{\"job\":\"test\",\"level\":\"info\", \"host\":\"${HOST}\"}" "{\"message\":\"${RESULT} found in ${SECONDS}s\"}"
+            smoloki "{\"job\":\"test\",\"level\":\"info\", \"host\":\"${HOSTNAME}\"}" "{\"message\":\"${RESULT} found in ${SECONDS}s\"}"
             exit 0
         fi
     done < passwords.txt
 done < usernames.txt
-smoloki "{\"job\":\"test\",\"level\":\"info\", \"host\":\"${HOST}\"}" "{\"message\":\"No match was found. Searched took ${SECONDS}s\"}"
+smoloki "{\"job\":\"test\",\"level\":\"info\", \"host\":\"${HOSTNAME}\"}" "{\"message\":\"No match was found. Searched took ${SECONDS}s\"}"
 exit 0
