@@ -29,7 +29,7 @@ test-credentials() {
                 echo "${username}:${password}"
                 return 0
                 ;;
-            000)
+            *)
                 if (( elapsed >= TIMEOUT_SECONDS )); then
                     # FIXED: Correct stderr redirection
                     echo "DEBUG: Timeout reached" >&2 
@@ -41,10 +41,6 @@ test-credentials() {
                 sleep "${SLEEP_INTERVAL}"
                 ((elapsed+=SLEEP_INTERVAL))
                 # The loop continues and runs 'curl' again
-                ;;
-            *)  
-                echo "Unmanaged HTTP code: ${HTTP_CODE}" >&2
-                return 1
                 ;;
         esac
     done
