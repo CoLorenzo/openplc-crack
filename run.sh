@@ -33,7 +33,7 @@ test-credentials() {
                 if (( elapsed >= TIMEOUT_SECONDS )); then
                     # FIXED: Correct stderr redirection
                     echo "DEBUG: Timeout reached" >&2 
-                    smoloki "{\"job\":\"test\",\"level\":\"info\", \"host\":\"${HOSTNAME}\"}" "{\"message\":\"Timeout reached (${TIMEOUT_SECONDS}s).\"}"
+                    smoloki "{\"job\":\"test\",\"level\":\"error\", \"host\":\"${HOSTNAME}\"}" "{\"message\":\"Can't reach the server, timeout (${TIMEOUT_SECONDS}s).\"}"
                     return 1 # Return 1 so the main loop knows to exit
                 fi
                 
